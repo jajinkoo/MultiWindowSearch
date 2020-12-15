@@ -15,6 +15,15 @@ namespace Multiwindowsearch
         public Form1()
         {
             InitializeComponent();
+
+        }
+
+        public void LoadTreeControl()
+        {
+                        
+
         }
     }
+
+
 }
