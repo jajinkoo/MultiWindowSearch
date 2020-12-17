@@ -107,6 +107,70 @@ namespace Multiwindowsearch
                 MessageBox.Show("Treeview2" + ex.Message);
             }
         }
+
+        // 트리뷰 +버튼 누른 후 동작 
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            SelectTreeView(e.Node);
+        }
+
+        void SelectTreeView(TreeNode node)
+        {
+            if (node.FullPath == null)
+            {
+                return;
+            }
+            string path = node.FullPath;
+            ViewDirectory(path);
+        }
+
+        void ViewDirectory(string path)
+        {
+            string curPath = path;
+
+            if (path.IndexOf("Root\\") == 0)
+            {
+                curPath = path.Substring(path.IndexOf("\\") + 1);
+
+                string strTemp = (curPath.Length > 4) ? curPath.Remove(curPath.IndexOf("\\") + 1, 1) : curPath;
+                curPath = strTemp;
+            }
+
+            try
+            {
+                listView1.Items.Clear();
+
+                string[] directories = Directory.GetDirectories(curPath);
+
+                foreach (string directory in directories)
+                {
+                    DirectoryInfo info = new DirectoryInfo(directory);
+                    ListViewItem item = new ListViewItem(new string[]
+                    {
+                        info.Name,info.LastWriteTime.ToString(), "파일폴더", ""
+                    });
+                    listView1.Items.Add(item);
+                }
+                
+                string[] files = Directory.GetFiles(curPath);
+
+                foreach (string file in files)
+                {
+                    FileInfo info = new FileInfo(file);
+                    ListViewItem item = new ListViewItem(new string[]
+                    {
+                        info.Name, info.LastWriteTime.ToString(), info.Extension, ((info.Length/1000)+1).ToString() +"KB"
+                    });
+                    listView1.Items.Add(item);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show("ViewDirectoryList" + ex.Message);
+            }
+
+        }
     }
 
 
